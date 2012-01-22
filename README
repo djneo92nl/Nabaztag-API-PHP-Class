@@ -1,10 +1,34 @@
-A PHP class to control the essential functions of a Nabaztag rabbit through the Nabaztag API.
+PHP Class for the Nabaztag API
+------------------------------
 
-Handles:
-- Text to speach
+A PHP class to control the functions of a Nabaztag rabbit through the Nabaztag API.
+
+Currently supports:
+
+- Text to speech
 - Ear positioning
 - Wake / sleep
+- Streaming media
 
-Requires PHP5, CURL and a Nabaztag rabbit: http://www.nabaztag.com/
+
+REQUIREMENTS
+------------
+
+PHP 5
+CURL
+A Nabaztag rabbit: http://www.nabaztag.com/
+
+
+FEATURE DEMOS
+-------------
 
 See nabaztag_example.php for a demo of the features.
+
+
+LICENCE
+-------
+
+Released under the The MIT License.
+
+http://www.opensource.org/licenses/mit-license.php
+

@@ -1,55 +1,86 @@
+<html>
+<head>
+	<title>Nabaztag PHP Class Examples</title>
+</head>
+
+<body>
+
+<h1>Nabaztag PHP Class Examples</h1>
+
 <?php
 
-include('nabaztag.class.php');
+require('Nabaztag.php');
 
 /**
- * Set serial and token variables to match your Nabaztag.
- * You can find your information by logging into
- * http://my.nabaztag.com/
+ * Set serial and API token variables to match your Nabaztag.
+ *
+ * Your serial number can be found on the bottom of your Nabaztag rabbit.
+ * You can create an API token by creating an account at http://www.nabaztag.com/
  */
 
-$serial	= '';
-$token	= '';
+$serial = ""; // TODO add your serial number here.
+$token = ""; // TODO add your API token here.
 
-// Collect values set in form
+// Get values from request.
 
-$phrase		= $_REQUEST['phrase'];
-$left_ear	= (int) $_REQUEST['left_ear'];
-$right_ear	= (int) $_REQUEST['right_ear'];
-$submit_ears	= $_REQUEST['submit_ears'];
-$wake_status	= (int) $_REQUEST['wake_status'];
+$phrase = $_REQUEST["phrase"];
+$leftEar = (int) $_REQUEST["left_ear"];
+$rightEar = (int) $_REQUEST["right_ear"];
+$submitEars = $_REQUEST["submit_ears"];
+$wakeStatus = $_REQUEST["wake_status"];
+$streamUrl = $_REQUEST["stream_url"];
 
-// Create the nabaztag object
+// Get an instance of the Nabaztag class.
 
-$nabaztag = new nabaztag($serial,$token);
+$nabaztag = new Nabaztag($serial, $token);
 
-// Make the bunny talk
+// Text to speech.
 
-if ($phrase)
+if (!is_null($phrase))
+{
 	$nabaztag->speak($phrase);
+}
 
-// Move bunny ears
+// Move rabbit ears.
 
-if ($submit_ears)
-	$nabaztag->move_ears($left_ear,$right_ear);
+if (!is_null($submitEars))
+{
+	$nabaztag->moveEars($leftEar, $rightEar);
+}
 
-echo "<h1>Nabaztag PHP Class Examples</h1>";
+// Set wake status.
 
-// Debug information
+if (!is_null($wakeStatus))
+{
+	$nabaztag->setWakeStatus($wakeStatus);
+}
+
+// Stream media URL.
+
+if (!is_null($streamUrl))
+{
+	$nabaztag->streamUrl($streamUrl);
+}
+
+// Debug information.
 
 echo "<p><b>Parameters sent to the API:</b></p>";
 
-$nabaztag->display_api_params();
+print_r($nabaztag->getApiParams());
+
+echo "<p><b>URLs sent to the streaming API:</b></p>";
+
+print_r($nabaztag->getStreamingApiUrls());
 
 echo "<p><b>The API responded:</b></p>";
 
-$nabaztag->display_api_response();
+print_r($nabaztag->getLastApiResponse());
 
-// Display form
+// Display form.
 
 ?>
 
-<h2>Text to Speach Example</h2>
+<h2>Text to Speech Example</h2>
 
 <form name="nabaztag_tts" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 
@@ -66,15 +97,38 @@ $nabaztag->display_api_response();
 
 <p><i>Enter a positon between 0 and 16. 0 points the ear straight up.</i></p>
 <p>
-Left Ear: <input type="text" name="left_ear" size="3" value="<?=$left_ear?>" />
-Right Ear: <input type="text" name="right_ear" size="3" value="<?=$right_ear?>" /><br />
+Left Ear: <input type="text" name="left_ear" size="3" value="<?=$leftEar?>" />
+Right Ear: <input type="text" name="right_ear" size="3" value="<?=$rightEar?>" />
 <input type="submit" name="submit_ears" value="Move Ears" />
 </p>
 
 </form>
 
-<?php
+<h2>Wake Status Example</h2>
 
-exit;
+<form name="nabaztag_status" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+<select name="wake_status">
+	<option value="1">Wake</option>
+	<option value="0">Sleep</option>
+</select>
+<input type="submit" name="submit_status_wake" value="Set Wake Status" />
+</p>
 
-?>
+</form>
+
+<h2>Streaming Media Example</h2>
+
+<form name="nabaztag_stream" action="<?=$_SERVER['PHP_SELF']?>" method="post">
+
+<p>Enter the URL of an MP3 file or online radio station.</p>
+<p>Working radio stream for testing: http://82.197.165.137/</p>
+
+<p>
+<input type="text" name="stream_url" size="50" value="<?=$streamUrl?>" />
+<input type="submit" name="submit_stream" value="Stream Media" />
+</p>
+
+</form>
+
+</body>
+</html>
